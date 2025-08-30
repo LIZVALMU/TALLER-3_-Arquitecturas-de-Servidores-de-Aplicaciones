@@ -1,0 +1,53 @@
+
+    private static void handleApiRequest(String method, String path, Map<String, String> queryParams,
+            Map<String, String> headers, BufferedReader in, OutputStream out) throws IOException {
+
+        String jsonResponse = "";
+
+        switch (path) {
+            case "/App/hello":
+                if (method.equals("GET") || method.equals("POST")) {
+                    String name = queryParams.getOrDefault("name", "Alison");
+                    if (name.isEmpty())
+                        name = "Alison";
+                    jsonResponse = String.format("{\"message\": \"¡Hola, %s!\"}",
+                            name, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+                } else {
+                    send405(out);
+                    return;
+                }
+                break;
+
+            case "/App/info":
+                if (method.equals("GET")) {
+                    String name = queryParams.getOrDefault("name", "Alison");
+                    String description = queryParams.getOrDefault("description", "Se realiza el query param para el framework");
+                    if (name.isEmpty())
+                        name = "Alison";
+                    LocalDateTime now = LocalDateTime.now();
+                    jsonResponse = String.format(
+                        "{\"message\": \"name: %s, description: %s\", \"current\": \"%s\"}",
+                        name, description, now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    );
+                } else {
+                    send405(out);
+                    return;
+                }
+                break;
+
+            case "/App/pi":
+                if (method.equals("GET")) {
+                    jsonResponse = String.format("{\"pi\": %.10f}", Math.PI);
+                } else {
+                    send405(out);
+                    return;
+                }
+                break;
+
+            default:
+                send404(out, path);
+                return;
+        }
+
+        sendJsonResponse(out, jsonResponse);
+    }

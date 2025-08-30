@@ -28,7 +28,7 @@ public class HttpServer {
 
     public static void main(String[] args) throws IOException {
         staticfiles("/static");
-        get("/App/hello", (req, resp) -> {
+        get("/app/hello", (req, resp) -> {
             String name = req.getValues("name");
             if (name == null || name.isEmpty())
                 name = "Mundo";
@@ -223,6 +223,7 @@ public class HttpServer {
         out.write(content);
     }
 
+    
     private static void handleApiRequest(String method, String path, Map<String, String> queryParams,
             Map<String, String> headers, BufferedReader in, OutputStream out) throws IOException {
 
@@ -231,10 +232,10 @@ public class HttpServer {
         switch (path) {
             case "/app/hello":
                 if (method.equals("GET") || method.equals("POST")) {
-                    String name = queryParams.getOrDefault("name", "Mundo");
+                    String name = queryParams.getOrDefault("name", "Alison");
                     if (name.isEmpty())
-                        name = "Mundo";
-                    jsonResponse = String.format("{\"message\": \"¡Hola, %s!\", \"timestamp\": \"%s\"}",
+                        name = "Alison";
+                    jsonResponse = String.format("{\"message\": \"¡Hola, %s!\"}",
                             name, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                 } else {
                     send405(out);
@@ -245,25 +246,34 @@ public class HttpServer {
             case "/app/time":
                 if (method.equals("GET")) {
                     LocalDateTime now = LocalDateTime.now();
-                    jsonResponse = String.format("{\"current_time\": \"%s\", \"formatted_time\": \"%s\"}",
-                            now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-                            now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")));
+                    jsonResponse = String.format("{\"current\": \"%s\"}",
+                            now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
                 } else {
                     send405(out);
                     return;
                 }
                 break;
 
-            case "/app/sum":
+            case "/app/info":
                 if (method.equals("GET")) {
-                    try {
-                        double a = Double.parseDouble(queryParams.getOrDefault("a", "0"));
-                        double b = Double.parseDouble(queryParams.getOrDefault("b", "0"));
-                        double result = a + b;
-                        jsonResponse = String.format("{\"a\": %.2f, \"b\": %.2f, \"sum\": %.2f}", a, b, result);
-                    } catch (NumberFormatException e) {
-                        jsonResponse = "{\"error\": \"Parámetros inválidos. Use números válidos para a y b.\"}";
-                    }
+                    String name = queryParams.getOrDefault("name", "Alison");
+                    String description = queryParams.getOrDefault("description", "Se realiza el query param para el framework");
+                    if (name.isEmpty())
+                        name = "Alison";
+                    LocalDateTime now = LocalDateTime.now();
+                    jsonResponse = String.format(
+                        "{\"message\": \"name: %s, description: %s\", \"current\": \"%s\"}",
+                        name, description, now.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                    );
+                } else {
+                    send405(out);
+                    return;
+                }
+                break;
+
+            case "/app/pi":
+                if (method.equals("GET")) {
+                    jsonResponse = String.format("{\"pi\": %.10f}", Math.PI);
                 } else {
                     send405(out);
                     return;
