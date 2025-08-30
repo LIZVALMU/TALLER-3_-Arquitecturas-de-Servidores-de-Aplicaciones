@@ -31,7 +31,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>escuela.edu.co</mainClass>
+                            <mainClass>escuela.edu.co.HttpServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -35,7 +35,8 @@ public class HttpServer {
             return String.format("{\"message\": \"Hello %s\", \"timestamp\": \"%s\"}",
                     name, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         });
-        get("/App/pi", (req, resp) -> String.valueOf(Math.PI));
+        // corregida a minúsculas para coincidir con el resto de endpoints
+        get("/app/pi", (req, resp) -> String.valueOf(Math.PI));
         if (args.length > 0) {
             new HttpServer(Integer.parseInt(args[0]));
             LOGGER.log(Level.INFO, "Servidor iniciado en puerto: " + args[0]);
@@ -50,8 +51,7 @@ public class HttpServer {
      * <p>
      * The server listens for incoming client connections and handles each
      * connection
-     * in a separate thread. If an I/O error occurs during server startup or while
-     * accepting connections, the exception is printed to the standard error stream.
+     * in a sequential (non-concurrent) manner to satisfy el requisito del taller.
      * </p>
      */
     public HttpServer() {
@@ -61,7 +61,8 @@ public class HttpServer {
 
             while (running) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(() -> handleClient(clientSocket)).start();
+                // manejo secuencial (sin crear hilos)
+                handleClient(clientSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,7 +72,7 @@ public class HttpServer {
     /**
      * Initializes and starts an HTTP server on the specified port.
      * The server listens for incoming client connections and handles each
-     * connection in a separate thread.
+     * connection in a sequential (no concurrent) manner.
      *
      * @param port the port number on which the server will listen for incoming
      *             connections
@@ -81,7 +82,8 @@ public class HttpServer {
             System.out.println("Servidor HTTP iniciado en http://localhost:" + port);
             while (running) {
                 Socket clientSocket = serverSocket.accept();
-                new Thread(() -> handleClient(clientSocket)).start();
+                // manejo secuencial (sin crear hilos)
+                handleClient(clientSocket);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -151,6 +153,37 @@ public class HttpServer {
             Map<String, String> queryParams = parseQueryString(queryString);
 
             if (path.startsWith("/app/")) {
+                // Primero intentar enrutamiento con lambdas registradas (solo GET)
+                if ("GET".equals(method) && GET_ROUTES.containsKey(path)) {
+                    RouteHandler handler = GET_ROUTES.get(path);
+                    Request req = new Request(method, path, queryParams, headers, in);
+                    Response resp = new Response(out);
+                    try {
+                        String result = handler.handle(req, resp);
+                        if (result == null) {
+                            // el handler ya escribió la respuesta usando Response
+                            return;
+                        }
+                        // decidir tipo de contenido según el resultado
+                        String trimmed = result.trim();
+                        if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+                            resp.sendJson(result);
+                        } else {
+                            resp.sendText(result);
+                        }
+                    } catch (Exception e) {
+                        LOGGER.log(Level.SEVERE, "Error ejecutando handler para ruta " + path, e);
+                        String body = "<h1>500 - Error interno</h1>";
+                        String response = "HTTP/1.1 500 Internal Server Error\r\n" +
+                                "Content-Type: text/html; charset=utf-8\r\n" +
+                                "Content-Length: " + body.getBytes().length + "\r\n" +
+                                "Connection: close\r\n\r\n" + body;
+                        out.write(response.getBytes());
+                    }
+                    return;
+                }
+
+                // Fallback a los endpoints API hardcodeados si no existe handler registrado
                 handleApiRequest(method, path, queryParams, headers, in, out);
                 return;
             }
@@ -316,7 +349,7 @@ public class HttpServer {
                     String value = URLDecoder.decode(keyValue[1], "UTF-8");
                     params.put(key, value);
                 } catch (UnsupportedEncodingException e) {
-
+                    LOGGER.log(Level.WARNING, "Error decoding query parameter: " + pair, e);
                 }
             }
         }
