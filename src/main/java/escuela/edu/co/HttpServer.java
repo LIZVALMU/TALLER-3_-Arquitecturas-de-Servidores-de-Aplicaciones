@@ -16,9 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
 
 public class HttpServer {
 
@@ -29,33 +26,30 @@ public class HttpServer {
 
     private static final Map<String, RouteHandler> GET_ROUTES = new HashMap<>();
 
-
-
-
-
-
-
-
     public static void main(String[] args) throws IOException {
-        staticfiles("/static"); 
+        staticfiles("/static");
         get("/App/hello", (req, resp) -> {
             String name = req.getValues("name");
-            if (name == null || name.isEmpty()) name = "Mundo";
+            if (name == null || name.isEmpty())
+                name = "Mundo";
             return String.format("{\"message\": \"Hello %s\", \"timestamp\": \"%s\"}",
                     name, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         });
         get("/App/pi", (req, resp) -> String.valueOf(Math.PI));
-        System.out.println(args[0]);
-        if(args.length > 0){
+        if (args.length > 0) {
             new HttpServer(Integer.parseInt(args[0]));
+            LOGGER.log(Level.INFO, "Servidor iniciado en puerto: " + args[0]);
         } else {
-        new HttpServer();
+            new HttpServer();
+            LOGGER.log(Level.INFO, "Servidor iniciado en puerto por defecto: " + SERVER_PORT);
         }
     }
+
     /**
      * Initializes and starts the HTTP server on the specified port.
      * <p>
-     * The server listens for incoming client connections and handles each connection
+     * The server listens for incoming client connections and handles each
+     * connection
      * in a separate thread. If an I/O error occurs during server startup or while
      * accepting connections, the exception is printed to the standard error stream.
      * </p>
@@ -76,9 +70,11 @@ public class HttpServer {
 
     /**
      * Initializes and starts an HTTP server on the specified port.
-     * The server listens for incoming client connections and handles each connection in a separate thread.
+     * The server listens for incoming client connections and handles each
+     * connection in a separate thread.
      *
-     * @param port the port number on which the server will listen for incoming connections
+     * @param port the port number on which the server will listen for incoming
+     *             connections
      */
     public HttpServer(int port) {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
@@ -109,7 +105,8 @@ public class HttpServer {
             STATIC_ROOT = candidate;
         } else {
             // si se pasa ruta absoluta, tomarla; sino fallback a la ruta pasada
-            STATIC_ROOT = relativeOrAbsolute.startsWith(File.separator) ? relativeOrAbsolute : "src/main/resources" + relativeOrAbsolute;
+            STATIC_ROOT = relativeOrAbsolute.startsWith(File.separator) ? relativeOrAbsolute
+                    : "src/main/resources" + relativeOrAbsolute;
         }
         System.out.println("Archivos estáticos en: " + STATIC_ROOT);
     }
@@ -121,12 +118,10 @@ public class HttpServer {
         GET_ROUTES.put(path, handler);
     }
 
-
     private static void handleClient(Socket clientSocket) {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            OutputStream out = clientSocket.getOutputStream()
-        ) {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                OutputStream out = clientSocket.getOutputStream()) {
             String requestLine = in.readLine();
             if (requestLine == null || requestLine.isEmpty()) {
                 return;
@@ -205,12 +200,18 @@ public class HttpServer {
     private static void sendFileResponse(OutputStream out, File file, String path) throws IOException {
         String mimeType = Files.probeContentType(file.toPath());
         if (mimeType == null) {
-            if (path.endsWith(".html")) mimeType = "text/html";
-            else if (path.endsWith(".css")) mimeType = "text/css";
-            else if (path.endsWith(".js")) mimeType = "application/javascript";
-            else if (path.endsWith(".png")) mimeType = "image/png";
-            else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) mimeType = "image/jpeg";
-            else mimeType = "application/octet-stream";
+            if (path.endsWith(".html"))
+                mimeType = "text/html";
+            else if (path.endsWith(".css"))
+                mimeType = "text/css";
+            else if (path.endsWith(".js"))
+                mimeType = "application/javascript";
+            else if (path.endsWith(".png"))
+                mimeType = "image/png";
+            else if (path.endsWith(".jpg") || path.endsWith(".jpeg"))
+                mimeType = "image/jpeg";
+            else
+                mimeType = "application/octet-stream";
         }
 
         byte[] content = Files.readAllBytes(file.toPath());
@@ -280,13 +281,15 @@ public class HttpServer {
     /**
      * Parses a URL query string into a map of parameter names and values.
      *
-     * <p>This method splits the input query string by '&' to separate key-value pairs,
+     * <p>
+     * This method splits the input query string by '&' to separate key-value pairs,
      * then splits each pair by '=' to extract the key and value. Both key and value
      * are URL-decoded using UTF-8 encoding before being added to the resulting map.
      * If the query string is null or empty, an empty map is returned.
      *
      * @param queryString the URL query string to parse (e.g., "name=John&age=30")
-     * @return a map containing parameter names as keys and their corresponding values
+     * @return a map containing parameter names as keys and their corresponding
+     *         values
      */
     private static Map<String, String> parseQueryString(String queryString) {
         Map<String, String> params = new HashMap<>();
@@ -312,7 +315,8 @@ public class HttpServer {
 
     /**
      * Sends an HTTP response with a JSON payload to the specified output stream.
-     * The response includes appropriate headers for content type, length, CORS, and connection closure.
+     * The response includes appropriate headers for content type, length, CORS, and
+     * connection closure.
      *
      * @param out  the OutputStream to which the HTTP response will be written
      * @param json the JSON string to be sent as the response body
@@ -330,7 +334,8 @@ public class HttpServer {
     /**
      * Sends a 400 Bad Request HTTP response to the client.
      *
-     * The response includes a simple HTML message indicating that the request was incorrect.
+     * The response includes a simple HTML message indicating that the request was
+     * incorrect.
      *
      * @param out the OutputStream to write the HTTP response to
      * @throws IOException if an I/O error occurs while writing to the output stream
@@ -345,8 +350,10 @@ public class HttpServer {
     /**
      * Sends a 405 Method Not Allowed HTTP response to the client.
      *
-     * This method writes an HTTP response with status code 405 and a simple HTML message
-     * indicating that the requested method is not allowed. The response is sent through
+     * This method writes an HTTP response with status code 405 and a simple HTML
+     * message
+     * indicating that the requested method is not allowed. The response is sent
+     * through
      * the provided OutputStream.
      *
      * @param out the OutputStream to write the HTTP response to
