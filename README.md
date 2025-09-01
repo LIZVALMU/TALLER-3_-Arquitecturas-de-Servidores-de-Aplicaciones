@@ -260,5 +260,39 @@ curl http://localhost:35000/hello
 ```
 
 ---
+
+## Ejemplo avanzado: Uso de @RequestParam
+
+Puedes crear un controlador que reciba parámetros desde la URL:
+
+```java
+package escuela.edu.co.framework;
+
+@RestController
+public class GreetingController {
+    @GetMapping("/greeting")
+    public String greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return "Hola " + name;
+    }
+}
+```
+
+Para iniciar el servidor y publicar el controlador:
+
+```bash
+java -cp target/classes escuela.edu.co.framework.MicroSpringBoot escuela.edu.co.framework.GreetingController
+```
+
+Accede en tu navegador o con curl:
+
+```
+curl "http://localhost:35000/greeting?name=Diego"
+# Respuesta: Hola Diego
+
+curl "http://localhost:35000/greeting"
+# Respuesta: Hola World
+```
+
+---
 *📚 Este proyecto demuestra cómo aplicar principios de ingeniería de software sólidos para crear código mantenible y escalable.*
 

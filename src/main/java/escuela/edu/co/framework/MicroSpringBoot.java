@@ -26,14 +26,34 @@ public class MicroSpringBoot {
         Router router = new SimpleRouter();
         StaticFileHandler staticFileHandler = new SimpleStaticFileHandler();
         int port = 35000;
-        // Registrar métodos anotados con @GetMapping
+        // Registrar métodos anotados con @GetMapping y soportar @RequestParam
         for (Method method : pojoClass.getDeclaredMethods()) {
             if (method.isAnnotationPresent(GetMapping.class)) {
                 GetMapping mapping = method.getAnnotation(GetMapping.class);
                 String path = mapping.value();
                 router.registerRoute(path, (req, resp) -> {
                     try {
-                        Object result = method.invoke(pojoInstance);
+                        // Preparar argumentos para el método
+                        Class<?>[] paramTypes = method.getParameterTypes();
+                        java.lang.annotation.Annotation[][] paramAnnotations = method.getParameterAnnotations();
+                        Object[] argsForMethod = new Object[paramTypes.length];
+                        for (int i = 0; i < paramTypes.length; i++) {
+                            RequestParam reqParam = null;
+                            for (java.lang.annotation.Annotation annotation : paramAnnotations[i]) {
+                                if (annotation instanceof RequestParam) {
+                                    reqParam = (RequestParam) annotation;
+                                    break;
+                                }
+                            }
+                            String value = reqParam != null ? reqParam.value() : null;
+                            String defaultValue = reqParam != null ? reqParam.defaultValue() : "";
+                            String paramValue = value != null ? req.getValues(value) : null;
+                            if (paramValue == null || paramValue.isEmpty()) {
+                                paramValue = defaultValue;
+                            }
+                            argsForMethod[i] = paramValue;
+                        }
+                        Object result = method.invoke(pojoInstance, argsForMethod);
                         if (result instanceof String) {
                             return (String) result;
                         } else {
