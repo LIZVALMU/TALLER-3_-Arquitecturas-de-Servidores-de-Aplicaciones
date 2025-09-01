@@ -229,5 +229,36 @@ Este proyecto está bajo la **Licencia MIT**. Ver el archivo `LICENSE` para más
 - Proyecto: [TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones](https://github.com/LIZVALMU/TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones)
 
 ---
+
+## Ejemplo: Framework Minimalista tipo MicroSpringBoot
+
+Puedes crear un servicio web básico usando POJOs y anotaciones personalizadas:
+
+```java
+package escuela.edu.co.framework;
+
+@RestController
+public class FirstWebService {
+    @GetMapping("/hello")
+    public String hello() {
+        return "¡Hola desde el primer servicio web!";
+    }
+}
+```
+
+Para iniciar el servidor y publicar el POJO:
+
+```bash
+java -cp target/classes escuela.edu.co.framework.MicroSpringBoot escuela.edu.co.framework.FirstWebService
+```
+
+Accede en tu navegador o con curl:
+
+```
+curl http://localhost:35000/hello
+# Respuesta: ¡Hola desde el primer servicio web!
+```
+
+---
 *📚 Este proyecto demuestra cómo aplicar principios de ingeniería de software sólidos para crear código mantenible y escalable.*
 
