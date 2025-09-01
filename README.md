@@ -1,143 +1,233 @@
-Claro, he reestructurado y mejorado tu archivo `README.md` para que sea más claro, profesional y completo.
+# Servidor HTTP con Arquitectura SOLID - Framework Web Java
 
-A continuación, te presento la versión mejorada. Puedes copiar el texto directamente o descargar el archivo `.md` al final.
+Un servidor de aplicaciones web ligero y extensible construido en Java, siguiendo los principios SOLID para lograr un código mantenible, escalable y testeable.
 
------
-
-# Servidor de Aplicaciones Web con API REST en Java
-
-Un servidor de aplicaciones web ligero y extensible construido en Java 21, diseñado para manejar solicitudes HTTP, servir archivos estáticos y exponer servicios RESTful.
-
-[](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)
-[](https://maven.apache.org/)
-[](https://www.google.com/search?q=%5Bhttps://opensource.org/licenses/MIT%5D\(https://opensource.org/licenses/MIT\))
-
------
-
-## Introducción
-
-Este proyecto presenta un servidor de aplicaciones web desarrollado desde cero en Java utilizando Sockets nativos. El objetivo principal fue construir una base sólida para entender el funcionamiento interno de los servidores web y, posteriormente, extender sus capacidades para soportar una API REST.
-
-El framework resultante es capaz de servir contenido estático (HTML, CSS, JavaScript) y de definir dinámicamente *endpoints* para servicios web, permitiendo la creación de aplicaciones web interactivas y completas.
-
------
+![Java](https://img.shields.io/badge/Java-17-orange.svg)
+![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ## ✨ Características Principales
 
-  - **Servidor HTTP/1.1:** Implementación del protocolo para manejar solicitudes `GET` y `POST`.
-  - **Enrutamiento Dinámico:** Define rutas para servicios REST de manera programática utilizando funciones lambda con el método `get()`.
-  - **Manejo de Archivos Estáticos:** Configura un directorio (`/www` por defecto) para servir archivos como HTML, CSS, JS e imágenes.
-  - **Procesamiento de Parámetros:** Extrae fácilmente parámetros de la *query string* en las solicitudes HTTP.
-  - **Respuestas en JSON:** Capacidad nativa para formular y enviar respuestas en formato JSON, ideal para APIs.
+- **Servidor HTTP/1.1**: Implementación completa del protocolo
+- **Enrutamiento Dinámico**: Sistema extensible de rutas
+- **Archivos Estáticos**: Servicio eficiente de contenido estático
+- **API REST**: Endpoints JSON listos para usar
+- **Sistema de Anotaciones**: Mapeo declarativo de rutas
+- **Configuración Flexible**: Múltiples configuraciones de servidor
+- **Testeable**: Arquitectura preparada para testing
+- **Compatibilidad**: Mantiene API original para migración gradual
 
------
+---
 
 ## 🛠️ Tecnologías Utilizadas
 
 | Tecnología | Versión | Propósito |
-| :--- | :--- | :--- |
-| **Java** | 21 | Lenguaje principal para el desarrollo de toda la lógica del backend. |
-| **Sockets Nativos**| Java Native | Utilizados para la comunicación de red de bajo nivel, gestionando la conexión TCP/IP. |
-| **HTTP/1.1** | - | Implementación del protocolo estándar para la comunicación cliente-servidor. |
-| **JSON Nativo** | - | Formateo manual de respuestas de la API, sin dependencias externas. |
-| **Maven** | 3.9+ | Gestión de dependencias del proyecto, compilación y empaquetado. |
+|:-----------|:--------|:----------|
+| **Java** | 17 | Lenguaje principal con características modernas |
+| **Maven** | 3.9+ | Gestión de dependencias y build |
+| **JUnit 5** | 5.9.3 | Framework de testing (preparado) |
+| **Sockets Nativos** | Java Native | Comunicación de red de bajo nivel |
+| **HTTP/1.1** | - | Protocolo estándar implementado |
 
------
+---
 
 ## 🚀 Instalación y Ejecución
 
-Sigue estos pasos para poner en marcha el servidor en tu entorno local.
-
 ### Prerrequisitos
 
-Asegúrate de tener instalado lo siguiente en tu sistema:
+- **Java 17** o superior
+- **Maven 3.9** o superior
+- **Git**
 
-  * **Java 21** (JDK)
-  * **Maven 3.9** o superior
-  * **Git**
+### Instalación
 
-### Pasos
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/LIZVALMU/TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones.git
+   cd TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones
+   ```
 
-1.  **Clonar el repositorio:**
+2. **Compilar el proyecto:**
+   ```bash
+   mvn clean compile
+   ```
 
-    ```bash
-    git clone https://github.com/LIZVALMU/TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones.git
-    cd TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones
-    ```
+3. **Empaquetar la aplicación:**
+   ```bash
+   mvn package
+   ```
 
-2.  **Compilar el proyecto con Maven:**
-    Este comando limpiará el proyecto, descargará las dependencias y empaquetará la aplicación.
+### Ejecución
 
-    ```bash
-    mvn clean package
-    ```
-
-3.  **Ejecutar el servidor:**
-    Ejecuta el servidor desde la raíz del proyecto. Por defecto, se iniciará en el puerto `35000`.
-
-    ```bash
-    java -cp target/classes escuela.edu.co.HttpServer
-    ```
-
-    **Para usar un puerto diferente:**
-    Si deseas especificar otro puerto, pásalo como argumento al ejecutar el comando.
-
-    ```bash
-    java -cp target/classes escuela.edu.co.HttpServer 8080
-    ```
-
-4.  **Acceder a la aplicación:**
-    Abre tu navegador web y visita la siguiente URL:
-    `http://localhost:35000/index.html`
-
------
-
-## 🧪 Ejemplos de Uso (API REST)
-
-Una vez que el servidor esté en funcionamiento, puedes probar los siguientes *endpoints*:
-
-  * **Servicio GET:**
-    `http://localhost:35000/hello?name=Alison`
-
-  * **Servicio POST:**
-    Utiliza una herramienta como Postman o `curl` para probar este endpoint.
-    `http://localhost:35000/hellopost?name=Alison`
-
------
-
-## 📂 Estructura del Proyecto
-
-```
-TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones/
-├── .git/
-├── src/
-│   └── main/
-│       └── java/
-│           └── escuela/
-│               └── edu/
-│                   └── co/
-│                       └── HttpServer.java    # Clase principal del servidor HTTP
-├── www/                                       # Directorio de archivos estáticos
-│   ├── index.html                             # Página de inicio
-│   ├── app.js                                 # Lógica del frontend
-│   ├── style.css                              # Estilos
-│   └── logo.png                               # Recursos gráficos
-├── pom.xml                                    # Archivo de configuración de Maven
-└── README.md                                  # Archivo de documentación
+#### Opción 1: Usando la nueva clase principal (Recomendado)
+```bash
+java -cp target/classes escuela.edu.co.HttpServerApplication
 ```
 
------
+#### Opción 2: Con puerto personalizado
+```bash
+java -cp target/classes escuela.edu.co.HttpServerApplication 8080
+```
 
-## 👤 Autor
+#### Opción 3: Usando compatibilidad con clase original
+```bash
+java -cp target/classes escuela.edu.co.HttpServer
+```
 
-  * **Alison Geraldine Valderrama Munar**
-      * GitHub: [Alison Valderrama](https://github.com/lizvalmu)
+#### Opción 4: Usando JAR ejecutable
+```bash
+java -jar target/HttpServer-1.0-SNAPSHOT.jar
+```
 
------
+### Acceso a la Aplicación
+
+Una vez iniciado el servidor, accede en tu navegador:
+- **Aplicación Web**: `http://localhost:35000/`
+- **API REST**: `http://localhost:35000/app/`
+
+---
+
+## 🧪 Ejemplos de Uso
+
+### API REST Endpoints
+
+#### Endpoints Predefinidos
+```bash
+# Saludo personalizado
+curl "http://localhost:35000/app/hello?name=Desarrollador"
+# Response: {"message": "¡Hola, Desarrollador!"}
+
+# Hora actual
+curl "http://localhost:35000/app/time"
+# Response: {"current": "2025-08-30T15:30:45"}
+
+# Valor de PI
+curl "http://localhost:35000/app/pi"
+# Response: {"pi": 3.1415926536}
+
+# Información con parámetros
+curl "http://localhost:35000/app/info?name=Juan&description=Prueba"
+# Response: {"message": "name: Juan, description: Prueba", "current": "2025-08-30T15:30:45"}
+```
+
+#### Rutas Dinámicas Registradas
+```bash
+# Rutas registradas en HttpServerApplication
+curl "http://localhost:35000/app/hello?name=SOLID"
+# Response: {"message": "Hello SOLID", "timestamp": "2025-08-30T15:30:45"}
+
+curl "http://localhost:35000/app/pi"
+# Response: "3.141592653589793"
+```
+
+### Extensión del Framework
+
+#### Crear Servidor Personalizado
+```java
+import escuela.edu.co.config.ServerConfiguration;
+import escuela.edu.co.server.HttpServerInterface;
+
+public class CustomServer {
+    public static void main(String[] args) throws Exception {
+        // Servidor de desarrollo
+        HttpServerInterface devServer = ServerConfiguration.createDevelopmentServer();
+        
+        // Servidor personalizado
+        HttpServerInterface customServer = ServerConfiguration
+            .createCustomServer(9090, "custom/static/path");
+        
+        devServer.start();
+    }
+}
+```
+
+#### Usar el Sistema de Configuración
+```java
+import escuela.edu.co.HttpServerApplication;
+
+// Crear servidor con configuración personalizada
+HttpServerInterface server = HttpServerApplication.createServer(8080);
+
+// Registrar rutas adicionales
+HttpServerApplication.get("/api/custom", (req, resp) -> {
+    return "{\"message\": \"Custom endpoint\"}";
+});
+
+server.start();
+```
+
+---
+
+## 🧩 Extensibilidad
+
+### Implementar Router Personalizado
+```java
+public class CachedRouter implements Router {
+    private final Map<String, RouteHandler> cache = new ConcurrentHashMap<>();
+    
+    @Override
+    public void registerRoute(String path, RouteHandler handler) {
+        cache.put(path, handler);
+    }
+    
+    @Override
+    public boolean handleRoute(String method, String path, Request request, Response response) {
+        // Implementación con caché
+        return false;
+    }
+}
+```
+
+### Implementar Manejador de Archivos Personalizado
+```java
+public class CachedStaticFileHandler implements StaticFileHandler {
+    private final Map<String, byte[]> fileCache = new ConcurrentHashMap<>();
+    
+    @Override
+    public void setStaticRoot(String path) {
+        // Configurar con caché
+    }
+    
+    @Override
+    public boolean serveStaticFile(String path, OutputStream out) throws IOException {
+        // Implementación con caché de archivos
+        return false;
+    }
+}
+```
+
+---
+
+## 🧪 Testing
+
+El proyecto está preparado para testing con JUnit 5:
+
+```java
+@Test
+void testRouterRegistration() {
+    Router router = new SimpleRouter();
+    RouteHandler handler = (req, resp) -> "test";
+    
+    router.registerRoute("/test", handler);
+    
+    // Assertions...
+}
+```
+
+---
 
 ## 📜 Licencia
 
-Este proyecto está distribuido bajo la **Licencia MIT**. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto está bajo la **Licencia MIT**. Ver el archivo `LICENSE` para más detalles.
 
------
+---
+
+## 👤 Autor
+
+**Alison Geraldine Valderrama Munar**
+- GitHub: [@lizvalmu](https://github.com/lizvalmu)
+- Proyecto: [TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones](https://github.com/LIZVALMU/TALLER-3_-Arquitecturas-de-Servidores-de-Aplicaciones)
+
+---
+*📚 Este proyecto demuestra cómo aplicar principios de ingeniería de software sólidos para crear código mantenible y escalable.*
 
