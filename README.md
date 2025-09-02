@@ -6,7 +6,7 @@ Un servidor de aplicaciones web ligero y extensible construido en Java, siguiend
 ![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## ✨ Características Principales
+##Características Principales
 
 - **Servidor HTTP/1.1**: Implementación completa del protocolo
 - **Enrutamiento Dinámico**: Sistema extensible de rutas
@@ -19,7 +19,7 @@ Un servidor de aplicaciones web ligero y extensible construido en Java, siguiend
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## Tecnologías Utilizadas
 
 | Tecnología | Versión | Propósito |
 |:-----------|:--------|:----------|
@@ -31,7 +31,7 @@ Un servidor de aplicaciones web ligero y extensible construido en Java, siguiend
 
 ---
 
-## 🚀 Instalación y Ejecución
+## Instalación y Ejecución
 
 ### Prerrequisitos
 
@@ -87,7 +87,7 @@ Una vez iniciado el servidor, accede en tu navegador:
 
 ---
 
-## 🧪 Ejemplos de Uso
+## Ejemplos de Uso
 
 ### API REST Endpoints
 
@@ -158,7 +158,7 @@ server.start();
 
 ---
 
-## 🧩 Extensibilidad
+## Extensibilidad
 
 ### Implementar Router Personalizado
 ```java
@@ -198,7 +198,7 @@ public class CachedStaticFileHandler implements StaticFileHandler {
 
 ---
 
-## 🧪 Testing
+## Testing
 
 El proyecto está preparado para testing con JUnit 5:
 
@@ -286,13 +286,13 @@ java -cp target/classes escuela.edu.co.framework.MicroSpringBoot escuela.edu.co.
 Accede en tu navegador o con curl:
 
 ```
-curl "http://localhost:35000/greeting?name=Diego"
-# Respuesta: Hola Diego
+curl "http://localhost:35000/greeting?name=Alison"
+# Respuesta: Hola Alison
 
 curl "http://localhost:35000/greeting"
 # Respuesta: Hola World
 ```
 
 ---
-*📚 Este proyecto demuestra cómo aplicar principios de ingeniería de software sólidos para crear código mantenible y escalable.*
+* Este proyecto demuestra cómo aplicar principios de ingeniería de software sólidos para crear código mantenible y escalable.*
 
